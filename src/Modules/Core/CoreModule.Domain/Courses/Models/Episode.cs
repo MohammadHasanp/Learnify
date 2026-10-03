@@ -1,7 +1,6 @@
 ﻿using Common.Domain;
 using Common.Domain.Exceptions;
 using Common.Domain.Utilities;
-using static Common.Domain.Exceptions.BaseDomainExceotion;
 
 namespace CoreModule.Domain.Courses.Models;
 
@@ -17,7 +16,8 @@ public class Episode : Entity
     public bool IsActive { get; private set; }
     public bool IsFree { get; set; }
 
-    public Episode(string title, Guid token, TimeSpan time, string videoName, string? attachmentName, bool isActive, string englishTitle, bool isFree)
+    public Episode(string title, Guid token, TimeSpan time, string videoName, string? attachmentName, bool isActive, string englishTitle,
+        bool isFree)
     {
         Guard(videoName, title, englishTitle);
         Title = title;
@@ -37,7 +37,8 @@ public class Episode : Entity
 
     private static void Guard(string videoName, string title, string englishTitle)
     {
-        NullOrEmptyDomainDataException.CheckString((videoName, nameof(videoName)), (title, nameof(title)), (englishTitle, nameof(englishTitle)));
+        NullOrEmptyDomainDataException.CheckString((videoName, nameof(videoName)), (title, nameof(title)),
+            (englishTitle, nameof(englishTitle)));
 
         if (englishTitle.IsUniCode())
             throw new InvalidDomainDataException("englishTitle Invalid");

@@ -1,5 +1,4 @@
-﻿
-using Common.Domain;
+﻿using Common.Domain;
 using Common.Domain.Exceptions;
 using Common.Domain.Utilities;
 using Common.Domain.ValueObjects;
@@ -70,7 +69,7 @@ public class Course : AggregateRoot
     public void AddSection(string title, int displayOrder)
     {
         if (Sections.Any(s => s.Title == title))
-            throw new InvalidDomainDataException("title Is Exsist");
+            throw new InvalidDomainDataException("title Is Exist");
 
         Sections.Add(new Section(title, displayOrder)
         {
@@ -96,8 +95,8 @@ public class Course : AggregateRoot
         section.Edit(title, displayOrder);
     }
 
-    public Episode AddEpisode(Guid sectionId, string title, Guid token, TimeSpan time, string videoExtension,
-        string? attachmentExtension, bool isActive, string englishTitle, bool isFree)
+    public Episode AddEpisode(Guid sectionId, string title, Guid token, TimeSpan time, string videoExtension, string? attachmentExtension,
+        bool isActive, string englishTitle, bool isFree)
     {
         var section = Sections.FirstOrDefault(s => s.Id == sectionId);
         if (section == null)
@@ -126,7 +125,8 @@ public class Course : AggregateRoot
         return episode;
     }
 
-    public void EditEpisode(Guid episodeId, Guid sectionId, string title, bool isActive, TimeSpan timeSpan, string? attachmentName, bool isFree)
+    public void EditEpisode(Guid episodeId, Guid sectionId, string title, bool isActive, TimeSpan timeSpan, string? attachmentName,
+        bool isFree)
     {
         var section = Sections.FirstOrDefault(f => f.Id == sectionId);
         if (section == null) throw new InvalidDomainDataException("Section NotFound");

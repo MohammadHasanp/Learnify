@@ -1,16 +1,15 @@
 ﻿using Common.Domain;
 using Common.Domain.Exceptions;
-using static Common.Domain.Exceptions.BaseDomainExceotion;
 
 namespace CoreModule.Domain.Courses.Models;
 
 public class Section : Entity
 {
     public Guid CourseId { get; internal set; }
-    public string Title { get; private set; } = null!;
+    public string Title { get; private set; }
     public int DisplayOrder { get; private set; }
 
-    public List<Episode> Episodes { get; private set; } = [];
+    public List<Episode> Episodes { get; private set; }
 
     public Section(string title, int displayOrder)
     {
@@ -39,10 +38,10 @@ public class Section : Entity
         return episode;
     }
 
-    void Guard(string title, int DisplayOrder)
+    void Guard(string title, int displayOrder)
     {
         NullOrEmptyDomainDataException.CheckString((title, nameof(title)));
-        if (DisplayOrder < 0)
-            throw new InvalidDomainDataException("DisplayOrder Invalid");
+        if (displayOrder < 0)
+            throw new InvalidDomainDataException("displayOrder Invalid");
     }
 }
