@@ -1,0 +1,96 @@
+﻿@using Common.Domain.Utilities
+@using Learnify.Web.Infrastructure.Util
+@using UserModule.Core
+@model CommentModule.Services.DTOs.CommentFilterResult
+
+
+<div class="main-comments">
+    @foreach (var item in Model.Datas)
+    {
+        <div class="comment-item shadow-sm pb-5">
+            <img src="@UserModuleDirectories.GetUserAvatar(item.AvatarName)" alt="@item.FullName">
+            <p class="title">
+                @item.FullName <span>
+                    <i class="fa fa-paper-plane"></i>
+                    ارسال شده در :
+                    @item.CreationDate.ToPersianDate()
+                </span>
+            </p>
+            <p class="text">
+                @item.Text
+            </p>
+            <div class="pull-left">
+                <a href="#send_comments" onclick="replyComment('@item.Id')" class="btn btn-sm btn-info">
+                    پاسخ
+                </a>
+                @if (User.Identity!.IsAuthenticated)
+                {
+                    if (User.GetUserId() == item.UserId)
+                    {
+                        <button onclick="deleteComment('@item.Id')" class="btn btn-sm btn-danger">
+                            حذف
+                        </button>
+                    }
+                }
+            </div>
+            @if (item.Replies.Any())
+            {
+                <br>
+                @foreach (var reply in item.Replies)
+                {
+                    <div class="answer pb-5">
+                        <img src="@UserModuleDirectories.GetUserAvatar(item.AvatarName)" alt="@item.FullName">
+                        <p class="title">
+                            @reply.FullName <span>
+                                <i class="fa fa-paper-plane"></i>
+                                ارسال شده در :
+                                @reply.CreationDate.ToPersianDate()
+                            </span>
+                        </p>
+                        <p class="text">
+                           @reply.Text
+                        </p>
+                        <div class="pull-left">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                if (User.GetUserId() == reply.UserId)
+                                {
+                                    <button onclick="deleteComment('@reply.Id')" class="btn btn-sm btn-danger">
+                                        حذف
+                                    </button>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <hr>
+                }
+            }
+
+        </div>
+    }
+    @if (Model.PageCount > 1)
+    {
+        <div class="paginat col-12">
+            @if (Model.StartPage > 1)
+            {
+                <a  href="#comment_list" onclick="changeCommentPage(1,'@Model.FilterParams.CommentType','@Model.FilterParams.EntityId')" class="first">1</a>
+            }
+            @for (var item = Model.StartPage; item <= Model.EndPage; item++)
+            {
+                if (item == Model.CurrentPage)
+                {
+                    <a class="current-page">@item</a>
+                }
+                else
+                {
+                    <a href="#comment_list" onclick="changeCommentPage(@item,'@Model.FilterParams.CommentType','@Model.FilterParams.EntityId')">@item</a>
+                }
+            }
+
+            @if (Model.EndPage < Model.PageCount)
+            {
+                <a href="#comment_list" onclick="changeCommentPage(@Model.PageCount,'@Model.FilterParams.CommentType','@Model.FilterParams.EntityId')" class="last">@Model.PageCount</a>
+            }
+        </div>
+    }
+</div>

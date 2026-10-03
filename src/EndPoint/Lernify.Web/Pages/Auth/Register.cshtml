@@ -1,0 +1,28 @@
+﻿@page
+@model Learnify.Web.Pages.Auth.RegisterModel
+@{
+    ViewData["title"] = "ثبت نام در سایت";
+    Layout = "Shared/_Auth";
+}
+<form method="post" class="row register mt-4 pt-0">
+
+    <div class="text-danger col-12" asp-validation-summary="All"></div>
+
+    <div class="phone mb-5 col-12">
+        <input type="number" class="form-control" asp-for="@Model.Mobile" placeholder="موبایل">
+    </div>
+
+    <div class="password mb-5 col-12 col-xl-6 col-lg-6">
+        <input type="password" class="form-control" required="" asp-for="@Model.Password" placeholder="کلمه عبور">
+    </div>
+
+    <div class="rePassword mb-5 col-12 col-xl-6 col-lg-6">
+        <input type="password" class="form-control" required="" asp-for="@Model.ConfirmPassword" placeholder="تکرار کلمه عبور">
+    </div>
+
+    <button type="submit" class="btn btn-success btn-register  mt-4 d-flex justify-content-center align-items-center">
+        <span> ثبت نام</span>
+        <i class="fa fa-chevron-left"></i>
+    </button>
+
+</form>

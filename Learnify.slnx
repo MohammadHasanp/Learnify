@@ -1,0 +1,44 @@
+<Solution>
+  <Folder Name="/docs/" />
+  <Folder Name="/src/" />
+  <Folder Name="/src/Common/">
+    <Project Path="src/Common/Common.Application/Common.Application.csproj" Id="23baa8f9-82c6-4ee2-8e18-403047338e98" />
+    <Project Path="src/Common/Common.AspNetCore/Common.AspNetCore.csproj" Id="4e4c65ef-bbf8-4689-b5c4-3f09ed52c029" />
+    <Project Path="src/Common/Common.CacheHelper/Common.CacheHelper.csproj" Id="4d9028d7-c220-4e2a-ac34-2a1775779452" />
+    <Project Path="src/Common/Common.Domain/Common.Domain.csproj" Id="4913b05d-84ae-41ac-b8d3-76818c16215a" />
+    <Project Path="src/Common/Common.EventBus/Common.EventBus.csproj" Id="7bcf33e0-38ac-4587-8eea-643ef925f329" />
+    <Project Path="src/Common/cOMMON.Infrastructure/Common.Infrastructure.csproj" Id="328f32fa-e6a6-4475-98a6-286d327f6656" />
+    <Project Path="src/Common/Common.Query/Common.Query.csproj" Id="e615fec1-158e-4d61-9438-21f7a4c61377" />
+  </Folder>
+  <Folder Name="/src/EndPoints/">
+    <Project Path="src/EndPoint/Lernify.Web/Learnify.Web.csproj" Id="753d51e0-89b0-44b2-9e51-f156e61a9c41" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/BLog/">
+    <Project Path="src/Modules/Blog/Blog.Module/BlogModule.csproj" Id="b0212440-e7d5-4fdb-ae42-d5eb4a37ec62" />
+  </Folder>
+  <Folder Name="/src/Modules/Comment/">
+    <Project Path="src/Modules/Comment/CommentModule/CommentModule.csproj" Id="024fbd57-89cd-4c61-80c2-bffcf9c7aac5" />
+  </Folder>
+  <Folder Name="/src/Modules/Core/">
+    <Project Path="src/Modules/Core/CoreModule.Application/CoreModule.Application.csproj" Id="c4e35626-2841-4612-a1b0-584fd1dd729b" />
+    <Project Path="src/Modules/Core/CoreModule.Config/CoreModule.Config.csproj" Id="e47ea41f-4923-4f95-8619-0588247d8af7" />
+    <Project Path="src/Modules/Core/CoreModule.Domain/CoreModule.Domain.csproj" Id="f15234b1-6c66-45f3-8b21-e9cd6f522065" />
+    <Project Path="src/Modules/Core/CoreModule.Facade/CoreModule.Facade.csproj" Id="b4c903ed-08e5-442a-b399-cce44fc6cba4" />
+    <Project Path="src/Modules/Core/CoreModule.Infrastructure/CoreModule.Infrastructure.csproj" Id="c676651c-70e8-441d-8df5-e4e5d3d1ac4d" />
+    <Project Path="src/Modules/Core/CoreModule.Query/CoreModule.Query.csproj" Id="c3a03b37-c2e7-4a5b-8a6e-8c3dc59eec21" />
+  </Folder>
+  <Folder Name="/src/Modules/Ticket/">
+    <Project Path="src/Modules/Ticket/TicketModule/TicketModule.csproj" Id="2e0256c7-15c8-4156-84a4-e23a65bf9660" />
+  </Folder>
+  <Folder Name="/src/Modules/Transactions/">
+    <Project Path="src/Modules/Ticket/TransactionModule/TransactionModule.csproj" Id="704d4696-7187-4cff-b38d-7710a2921b1a" />
+  </Folder>
+  <Folder Name="/src/Modules/User/" />
+  <Folder Name="/src/Modules/User/User.Module.Data/">
+    <Project Path="src/Modules/User/User.Module.Data/User.Module.Data.csproj" Id="c0162118-d5ff-412e-a180-c0a248c28ed8" />
+  </Folder>
+  <Folder Name="/src/Modules/User/UserModule.Core/">
+    <Project Path="src/Modules/User/UserModule.Core/UserModule.Core.csproj" Id="40bce484-9eb4-4c07-8585-7678b64d046b" />
+  </Folder>
+</Solution>

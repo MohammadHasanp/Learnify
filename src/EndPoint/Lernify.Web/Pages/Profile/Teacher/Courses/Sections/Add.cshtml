@@ -1,0 +1,36 @@
+﻿@page "{courseId}"
+@model Learnify.Web.Pages.Profile.Teacher.Courses.Sections.AddModel
+@{
+    ViewData["Title"] = "ثبت دوره";
+    Layout = "Shared/_ProfileLayout";
+}
+<div class="row ">
+    <div class="col-12 info shadow pl-0 pr-0">
+        <p class="title">
+            <i class="fa fa-address-card-o"></i>
+            @ViewData["Title"]
+        </p>
+        <div class="info-body p-2">
+            <form method="post" class="row">
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        عنوان :
+                    </p>
+                    <input asp-for="@Model.Title" type="text" class="form-control" placeholder="عنوان">
+                    <span class="text-danger" asp-validation-for="@Model.Title"></span>
+                </div>
+
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        ترتیب نمایش :
+                    </p>
+                    <input asp-for="@Model.DisplayOrder" type="number" class="form-control" placeholder="ترتیب نمایش ">
+                    <span class="text-danger" asp-validation-for="@Model.DisplayOrder"></span>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn  btn-save  mt-3">ثبت اطلاعات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

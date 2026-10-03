@@ -1,0 +1,26 @@
+﻿@using User.Module.Data.Entities._Enum
+@model Learnify.Web.ViewModels.EditRoleViewModel
+<form class="row" method="post" asp-page-handler="Edit" data-ajax="true">
+    @Html.HiddenFor(f=>f.RoleId)
+    <div class="col-6">
+        <input asp-for="@Model.Title" type="text" class="form-control" placeholder="عنوان"/>
+    </div>
+    <div class="col-md-6">
+        <ul>
+            @foreach (var item in Enum.GetNames(typeof(Permission)))
+            {
+                <li>
+                    <label class="cursor-pointer">
+                        <input name="permissions"
+                               checked="@(Model.Permissions.Any(r => r.ToString() == item) ? "checked" : null)" value="@item" type="checkbox"/>
+                        @item
+                    </label>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-6"></div>
+    <div class="col-md-12 d-flex mt-2 justify-content-end">
+        <submit/>
+    </div>
+</form>

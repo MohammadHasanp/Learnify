@@ -1,0 +1,103 @@
+﻿@page
+@using Common.Domain.Utilities
+@using Learnify.Web.Infrastructure.Util
+@model Learnify.Web.Pages.Profile.IndexModel
+@{
+    ViewData["Title"] = "پنل کاربری";
+    Layout = "Shared/_ProfileLayout";
+}
+<div class="row ">
+    <div class="col-12 col-lg-6 col-xl-6 ">
+        <div class="info custom-shadow">
+
+            <p class="title">
+                <i class="fa fa-address-card-o"></i>
+                اطلاعات حساب
+            </p>
+
+            <div class="info-body p-2">
+                <div>
+                    <p>نام و نام خانوادگی : @Model.UserDto!.Name @Model.UserDto.Family</p>
+                </div>
+                <div>
+                    <p>ایمیل : <label>@Model.UserDto.Email</label></p>
+                </div>
+                <div>
+                    <p>شماره تلفن : @Model.UserDto.Mobile</p>
+                </div>
+                <a asp-page="Edit" class="btn btn-info btn-block">تکمیل اطلاعات </a>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-12 col-xl-6 col-lg-6 ">
+        <div class="notifications shadow">
+            <p class="title">
+                <i class="zmdi zmdi-notifications-active"></i>
+                آخرین پیغام
+            </p>
+            <div class="notification-body p-1">
+                @if (Model.NewNotifications.Any())
+                {
+                    @foreach (var item in Model.NewNotifications)
+                    {
+                        <div class="item pb-3">
+                            <h6 class="mb-0 mt-1">@item.Title</h6>
+                            <hr />
+                            <p>@Html.Raw(item.Text)</p>
+                            <span class="pull-left">@item.CreationDate.ToPersianDate()</span>
+                        </div>
+                    }
+                    <a asp-page="Notifications" class="btn btn-info btn-block">نمایش همه</a>
+                }
+
+                else
+                {
+                    <div class="no-item text-center">
+                        <p>
+                            <i class="fa fa-info text-info"></i>
+                            موردی برای نمایش وجود ندارد
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-12 mt-4">
+        <div class="favorites shadow">
+            <p class="title">
+                <i class="fa fa-heart text-danger"></i>
+                علاقه مندی ها
+            </p>
+            <div class="favorites-body">
+                <div class="item">
+                    <img src="images/course.jpg" alt="">
+                    <a href="#" class="item-title">
+                        دوره آموزش برنامه نویسی Asp.NetCore به همراه پروژه عملی
+                    </a>
+                    <p class="tools"><i class="fa fa-trash text-danger" title="" data-toggle="tooltip" data-original-title="حذف"></i></p>
+                </div>
+                <div class="item">
+                    <img src="images/Course/4.jpg" alt="">
+                    <a href="#" class="item-title">
+                        دوره آموزش برنامه نویسی Asp.NetCore به همراه پروژه عملی
+                    </a>
+                    <p class="tools"><i class="fa fa-trash text-danger" title="" data-toggle="tooltip" data-original-title="حذف"></i></p>
+                </div>
+                <div class="item">
+                    <img src="images/Course/2.png" alt="">
+                    <a href="#" class="item-title">
+                        آموزش رایگان nextJs
+                    </a>
+                    <p class="tools"><i class="fa fa-trash text-danger" title="" data-toggle="tooltip" data-original-title="حذف"></i></p>
+                </div>
+                <!-- <div class="no-item text-center">
+                    <p>
+                        <i class="fa fa-info text-info"></i>
+                        موردی برای نمایش وجود ندارد
+                    </p>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>

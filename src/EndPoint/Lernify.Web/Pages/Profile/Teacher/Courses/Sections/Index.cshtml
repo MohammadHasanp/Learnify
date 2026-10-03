@@ -1,0 +1,109 @@
+﻿@page "{courseId}"
+@model Learnify.Web.Pages.Profile.Teacher.Courses.Sections.IndexModel
+@{
+    ViewData["Title"] = "مدیریت فصل های دوره" + $"`{Model.CourseDto!.Title}`";
+    Layout = "Shared/_ProfileLayout";
+    var counter = 1;
+
+}
+<div class="row ">
+    <a asp-page="Add" asp-route-courseId="@Model.CourseDto.Id" class="btn btn-save mr-2 mb-4 float-right">افزودن فصل جدید</a>
+
+    <div class="col-12 info shadow pl-0 pr-0">
+        <p class="title">
+            <i class="fa fa-paper-plane"></i>
+            @ViewData["Title"]
+        </p>
+        <div class="info-body ">
+            <div id="accordion">
+                @if (Model.CourseDto.Sections.Count > 0)
+                {
+                    @foreach (var item in Model.CourseDto!.Sections.OrderBy(d => d.DisplayOrder))
+                    {
+                        <div class="card">
+                            <div class="card-header" id="h_@item.Id">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link " data-toggle="collapse" data-target="#a_@item.Id" aria-expanded="true" aria-controls="a_@item.Id">
+                                        @item.Title
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="a_@item.Id" class="collapse " aria-labelledby="h_@item.Id" data-parent="#accordion">
+                                <div class="card-body">
+                                    <a asp-page="Episodes/Add" asp-route-courseId="@Model.CourseDto.Id" asp-route-sectionId="@item.Id" class="btn btn-save mr-2 mb-4 float-right">افزودن قسمت جدید</a>
+                                    <table class="table   table-hover  table-striped text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>عنوان</th>
+                                                <th>زمان</th>
+                                                <th>وضعیت</th>
+                                                <th>رایگان است</th>
+                                                <th>عملیات</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (item.Episodes.Count > 0)
+                                            {
+                                                @foreach (var episode in item.Episodes)
+                                                {
+                                                    <tr>
+                                                        <td>@counter</td>
+                                                        <td>@episode.Title</td>
+                                                        <td>@episode.Time</td>
+                                                        <td>
+                                                            @if (episode.IsActive)
+                                                            {
+                                                                <label>فعال</label>
+                                                            }
+                                                            else
+                                                            {
+                                                                <label>غیر فعال</label>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @if (@episode.IsFree)
+                                                            {
+                                                                <text>بله</text>
+                                                            }
+                                                            else
+                                                            {
+                                                                <text>خیر</text>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            <a asp-page="Episodes/Edit" asp-route-courseId="@Model.CourseDto.Id"
+                                                               asp-route-sectionId="@item.Id" asp-route-episodeId="@episode.Id"
+                                                               class="btn btn-info">ویرایش</a>
+                                                        </td>
+                                                    </tr>
+                                                    counter += 1;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="6">موردی برای نمایش یافت نشد</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <table class="table   table-hover  table-striped text-center">
+                        <tbody>
+                            <tr>
+                                <td colspan="5">موردی برای نمایش یافت نشد</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>

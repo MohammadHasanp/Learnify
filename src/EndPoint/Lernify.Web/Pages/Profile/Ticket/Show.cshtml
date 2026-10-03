@@ -1,0 +1,89 @@
+﻿@page "{id:guid}"
+@using Common.Domain.Utilities
+@using Learnify.Web.Infrastructure.Util
+@using TicketModule.Domain
+@model Learnify.Web.Pages.Profile.Ticket.ShowModel
+@{
+    ViewData["Title"] = Model.Ticket.Title;
+    Layout = "Shared/_ProfileLayout";
+}
+
+<div class="row ">
+    <div class="col-12 info shadow pl-0 pr-0">
+        <p class="title">
+            @ViewData["Title"]
+            @switch (Model.Ticket.TicketStatus)
+            {
+                case TicketStatus.Pending:
+                    <span style="font-size:13px;" class="badge badge-info">درحال برسی</span>
+                    break;
+
+                case TicketStatus.Answered:
+                    <span style="font-size:13px;" class="badge badge-success">پاسخ داده شده</span>
+                    break;
+
+                case TicketStatus.Closed:
+                    <span style="font-size:13px;" class="badge badge-danger">بشته شده</span>
+                    break;
+
+                default:
+                    break;
+            }
+            @if (Model.Ticket.TicketStatus != TicketStatus.Closed)
+            {
+                <delete-item url="@Url.Page("Show", "CloseTicket", new { ticketId = Model.Ticket.Id })"
+                             class="btn btn-sm  btn-close pull-left"
+                             description="ایا از بستن تیکت اطمینان دارید؟">بستن تیکت</delete-item>
+            }
+        </p>
+        <div class="ticket-Body">
+            <div class="chat">
+                <div class="chat-m">
+                    <div class="chat-me">
+                        <p>@Model.Ticket.Text</p>
+                        <span> @Model.Ticket.CreationDate.ToPersianDateTime()</span>
+                    </div>
+                </div>
+            </div>
+
+            @foreach (var item in Model.Ticket.Messages.OrderBy(t => t.CreationDate))
+            {
+                <div class="chat">
+                    @if (item.UserId == User.GetUserId())
+                    {
+                        <div class="chat-m">
+                            <div class="chat-me">
+                                <p>@item.Text</p>
+                                <span> @item.CreationDate.ToPersianDateTime()</span>
+                            </div>
+                        </div>
+                    }
+
+                    else
+                    {
+                        <div class="chat-y">
+                            <div class="chat-you">
+                                <label>@item.OwnerFullName</label>
+                                <p>@item.Text</p>
+                                <span> @item.CreationDate.ToPersianDateTime()</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <form method="post" class="send-message">
+            @if (Model.Ticket.TicketStatus == TicketStatus.Closed)
+            {
+                <input type="text" disabled="" class="form-control" placeholder="امکان ارسال پیام وجود ندارد">
+            }
+            else
+            {
+                <input type="text" asp-for="Text" class="form-control" placeholder="متن پیام">
+                <button type="submit" class="btn btn-sm btn-sendMessage">
+                    <i class="zmdi zmdi-mail-send"></i>
+                </button>
+            }
+        </form>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+﻿@page
+@using Common.Application
+@using Common.Domain.Utilities
+@using CoreModule.Application._Utilities
+@using CoreModule.Domain.Courses.Enums
+@using Learnify.Web.Infrastructure.Util
+@model Learnify.Web.Pages.Profile.Teacher.Courses.IndexModel
+@{
+    Layout = "Shared/_ProfileLayout";
+    ViewData["Title"] = "دوره ها";
+}
+<div class="row ">
+    <div class="col-12 info shadow pl-0 pr-0">
+        <p class="title">
+            <i class="fa fa-paper-plane"></i>
+            @ViewData["Title"]
+        </p>
+
+        <br>
+        <a asp-page="Add" class="btn btn-save mr-2 mb-4 float-right">ثبت دوره جدید</a>
+        <div class="info-body p-2">
+            <div class="table-responsive">
+                <h5>
+                    <i class="fa fa-list"></i>
+                    لیست دوره ها
+                </h5>
+                <table class="table   table-hover  table-striped text-center">
+                    <thead>
+                        <tr>
+                            <th>عکس</th>
+                            <th>عنوان</th>
+                            <th>قیمت</th>
+                            <td>وضعیت</td>
+                            <th>تاریخ ثبت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.FilterResult.Datas.Count > 0)
+                        {
+                            @foreach (var item in Model.FilterResult.Datas)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@CoreModuleDirectories.GetCourseImage(item.ImageName)" style="max-width:120px" />
+                                    </td>
+                                    <td>@item.Title</td>
+                                    <td>@item.Price.TooMan(true)</td>
+
+                                    <td>
+                                        @switch (item.ActionStatus)
+                                        {
+                                            case CourseActionStatus.Pending:
+                                                <span style="font-size:13px;" class="badge badge-info">درحال برسی</span>
+                                                break;
+
+                                            case CourseActionStatus.Active:
+                                                <span style="font-size:13px;" class="badge badge-success">فعال</span>
+                                                break;
+
+                                            case CourseActionStatus.DeActive:
+                                                <span style="font-size:13px;" class="badge badge-danger">غیرفعال</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.CreationDate.ToPersianDate()
+                                    </td>
+                                    <td>
+                                        <a asp-page="Sections/Index" asp-route-courseId="@item.Id" class="btn btn-sm btn-primary">مدیریت سرفصل ها</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">موردی برای نمایش یافت نشد</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <hr class="mt-0">
+            <partial name="Shared/_Pagination" model="Model.FilterResult" />
+        </div>
+    </div>
+</div>
+

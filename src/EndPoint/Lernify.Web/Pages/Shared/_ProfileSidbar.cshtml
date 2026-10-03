@@ -1,0 +1,111 @@
+﻿@using CoreModule.Domain.Teachers.Enums
+@using CoreModule.Facade.Teachers
+@using CoreModule.Query.Teachers.DTOs
+@using Learnify.Web.Infrastructure.Util
+@using UserModule.Core
+@using UserModule.Core.Services
+@inject IUserService Service
+@inject ITeacherFaced TeacherFaced
+@{
+    TeacherDto? teacher = new TeacherDto();
+    var user = await Service.GetUserByMobile(User.GetUserMobile());
+    if (user != null)
+        teacher = await TeacherFaced.GetByUserId(user.Id);
+}
+<div class="col-12 col-xl-3 col-lg-3 col-md-4">
+    <div class="profile-menu shadow-lg">
+        <div class="avatar">
+            <a href="#" title="خروج" data-toggle="tooltip" data-placement="top" class="sign-out" data-original-title="خروج">
+                <i class="zmdi zmdi-power text-danger"></i>
+            </a>
+            <div class="image">
+                <form>
+                    <a href="javascript:void(0)" title="" data-toggle="tooltip" data-original-title="تغییر آواتار">
+                        <input type="file" id="upImgAvatar" name="avatar" class="ProfileAvatarInput">
+                        <i class="zmdi zmdi-edit"></i>
+                    </a>
+                    <img src=" @UserModuleDirectories.GetUserAvatar(user?.Avatar)" alt="اواتار کاربر">
+                </form>
+            </div>
+            <p>@user?.Name @user?.Family</p>
+        </div>
+        <div class="showMenu">
+            <a href="javascript:void(0)">
+                نمایش منو
+            </a>
+            <i class="fa fa-chevron-down pull-left"></i>
+
+        </div>
+        <ul>
+            <li>
+                <a href="/Profile" class="selected">
+                    <i class="zmdi zmdi-view-dashboard"></i>
+                    داشبورد
+
+                </a>
+            </li>
+            <li>
+                <a href="/Profile/Edit">
+                    <i class="fa fa-edit"></i>
+                    ویرایش حساب کاربری
+                </a>
+            </li>
+
+            @if (teacher != null && teacher.TeacherStatus == TeacherStatus.Active)
+            {
+                <li>
+                    <a href="/Profile/teacher/courses">
+                        <i class="fa fa-edit"></i>
+                        پنل مدرس
+                    </a>
+                </li>
+            }
+
+            <li>
+                <a href="/Profile/ChangePassword">
+                    <i class="fa fa-expeditedssl"></i>
+                    تغیر کلمه عبور
+                </a>
+            </li>
+
+            <li>
+                <a href="/Profile/Ticket">
+                    <i class="fa fa-paper-plane"></i>
+                    تیکت ها
+                </a>
+            </li>
+            <li>
+                <a href="/Profile/Orders">
+                    <i class="zmdi zmdi-gradient"></i>
+                    فاکتور ها
+                </a>
+            </li>
+            <li>
+                <a href="/Profile/Courses">
+                    <i class="fa fa-graduation-cap"></i>
+                    دوره های من
+                </a>
+            </li>
+            <li>
+                <a href="/Profile/Comments">
+                    <i class="fa fa-comments-o"></i>
+                    نظرات
+                </a>
+            </li>
+            <li>
+                <a href="/Profile/Notifications">
+                    <i class="zmdi zmdi-notifications"></i>
+
+                    پیغام ها
+                </a>
+            </li>
+            <li>
+                <a href="/Auth/Logout">
+                    <i class="fa fa-sign-out"></i>
+                    خروج
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>

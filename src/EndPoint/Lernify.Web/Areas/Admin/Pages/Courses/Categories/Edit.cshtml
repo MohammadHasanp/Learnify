@@ -1,0 +1,30 @@
+﻿@page "{id}"
+@model Learnify.Web.Areas.Admin.Pages.Courses.Categories.EditModel
+@{
+    ViewData["title"] = "ویرایش دسته بندی";
+    ViewData["selected"] = "courses_categories";
+
+}
+<div class="card">
+    <form class="card-body row" method="post">
+        <div class="col-12 col-lg-6 col-md-6 mb-3">
+            <p class="mb-0">
+                <i class="fa fa-user"></i>
+                عنوان :
+            </p>
+            <input asp-for="@Model.Title" type="text" class="form-control" placeholder="عنوان">
+            <span class="text-danger" asp-validation-for="@Model.Title"></span>
+        </div>
+        <div class="col-12 col-lg-6 col-md-6 mb-3">
+            <p class="mb-0">
+                <i class="fa fa-user"></i>
+                Slug :
+            </p>
+            <input asp-for="@Model.Slug" type="text" class="form-control" placeholder="عنوان انگلیسی">
+            <span class="text-danger" asp-validation-for="@Model.Slug"></span>
+        </div>
+        <div class="col-md-12 d-flex mt-2 justify-content-end">
+            <submit />
+        </div>
+    </form>
+</div>

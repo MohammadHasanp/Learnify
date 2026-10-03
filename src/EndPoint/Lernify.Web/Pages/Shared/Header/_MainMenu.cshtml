@@ -1,0 +1,34 @@
+﻿@using CoreModule.Facade.CourseCategories
+@inject ICourseCategoryFacade CourseCategoryFacade
+@{
+    var categories = await CourseCategoryFacade.GetMainCategory();
+}
+<ul class="main-menu">
+    @foreach (var item in categories)
+    {
+        var hasChild = item.Childs.Any();
+        <li class="menu">
+            <a href="/courses?filterparams.CategorySlug=@item.Slug">
+                @item.Title
+                @if (hasChild)
+                {
+                    <i class="zmdi zmdi-chevron-down"></i>
+                }
+            </a>
+
+            @if (hasChild)
+            {
+                <ul class="category">
+                    @foreach (var child in item.Childs)
+                    {
+                        <li>
+                            <a href="/courses?filterparams.CategorySlug=@child.Slug">
+                                @child.Title
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+</ul>

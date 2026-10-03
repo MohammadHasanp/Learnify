@@ -1,0 +1,7 @@
+﻿@model String
+<label asp-for="@Model" class="label-element"></label>
+<div class="form-element-with-icon">
+    <input type="text" class="input-element" asp-for="@Model">
+    <i class="fad fa-mobile-alt"></i>
+</div>
+<span asp-validation-for="@Model"></span>

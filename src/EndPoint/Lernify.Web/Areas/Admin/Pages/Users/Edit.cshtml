@@ -1,0 +1,62 @@
+﻿@page "{id}"
+@using UserModule.Core.Services
+@model Learnify.Web.Areas.Admin.Pages.Users.EditModel
+@inject IRoleService Service
+
+@{
+    ViewData["title"] = "ویرایش کاربر";
+    ViewData["selected"] = "users";
+    var roles = await Service.GetAllRole();
+}
+
+<div class="card">
+    <form method="post" class="card-body row">
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Family" class="form-label"></label>
+            <input asp-for="Family" class="form-control" />
+            <span asp-validation-for="Family" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">نقش‌ها</label>
+            <select class="form-control" name="roles" multiple>
+                @foreach (var item in roles)
+                {
+                    <option value="@item.Id"selected="@(Model.CurrentUserRoles.Contains(item.Id) ? "selected" : null)">@item.RoleTitle</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" type="password" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="col-12 text-end mt-3">
+            <button type="submit" class="btn btn-primary">
+                ذخیره تغییرات
+            </button>
+        </div>
+
+    </form>
+</div>

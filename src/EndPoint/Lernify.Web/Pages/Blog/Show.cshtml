@@ -1,0 +1,177 @@
+﻿@page "/blog/{slug}"
+@using BlogModule.Services
+@using BlogModule.Utilities
+@using CommentModule.Domain
+@using Common.Domain.Utilities
+@using Learnify.Web.Infrastructure.Util
+@using UserModule.Core
+@using UserModule.Core.Services
+@model Learnify.Web.Pages.Blog.ShowModel
+@inject IUserService UserFacade
+@inject IBlogService BlogService
+@{
+    var writer = await UserFacade.GetUserById(Model.BlogPost.UserId);
+    var category = await BlogService.GetCategoryById(Model.BlogPost.CategoryId);
+}
+@section meta
+{
+    <link rel="stylesheet" href="/css/Article.min.css">
+}
+<div class="main-content">
+    <div class="breadcrumb">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12  col-xl-8 col-lg-7">
+                    <h1>@Model.BlogPost.Title</h1>
+                    <ul>
+                        <li>
+                            <a href="/">
+                                خانه
+                                <i class="fa fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/blog">
+                                بلاگ
+                                <i class="fa fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/blog?category=@category.Slug">
+                                @category.Title
+                                <i class="fa fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="current">
+                                @Model.BlogPost.Title
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12  col-xl-4 col-lg-5 left-side">
+                    <div class="course-shortlink shadow-sm">
+                        <span class="title"> لینک کوتاه </span>
+                        <span class="link">
+                            learnify.com/Q/xG99
+                        </span>
+                        <a href="javascript:void(0)" data-toggle="tooltip" title="کپی" class="copy-btn"
+                           data-clipboard-text="codeyad.com/c/xG99"><i class="zmdi zmdi-copy"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mb-2 mt-4">
+        <div class="row">
+            <div class="col-12 col-xl-3 col-lg-4  mb-3">
+                <div class="article-info p-3">
+                    <div class="avatar">
+                        <img src="@UserModuleDirectories.GetUserAvatar(writer!.Avatar)" alt="@Model.BlogPost.WriterName" />
+
+                    </div>
+                    <div class="teacher mb-3">
+                        <div class="d-inline-block">
+                            <i class="zmdi zmdi-account-o"></i>
+                            نویسنده :
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <a href="#">@Model.BlogPost.WriterName</a>
+                        </div>
+                    </div>
+                    <div class="students mb-3">
+                        <div class="d-inline-block">
+                            <i class="zmdi zmdi-accounts-outline"></i>
+                            بازدید
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <span>@Model.BlogPost.Visit.ToString("#,0")</span> <label>نفر</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-inline-block">
+                            <i class="zmdi zmdi-comments text-uppercase"></i>
+                            تعداد نظرات :
+                        </div>
+                        <div class="pull-left d-inline-block">
+
+                            8
+
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-inline-block">
+                            <i class="zmdi zmdi-calendar"></i>
+                            تاریخ انتشار :
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <span>@Model.BlogPost.CreationDate.ToPersianDate()</span>
+                        </div>
+                    </div>
+                    <div class="status mb-3">
+                        <div class="d-inline-block">
+                            <i class="fa fa-info"></i>
+                            موضوع :
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <span class="text-primary">@category.Title</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-9 col-lg-8 ">
+                <div class="Article-body">
+                    <div class="baner">
+                        <img src="@BlogDirectories.GetPostImage(Model.BlogPost.ImageName)" alt="@Model.BlogPost.Title" />
+                    </div>
+                    <div class="custom-shadow">
+                        <div class="tabs mt-2">
+                            <div class="tab-titles row">
+                                <a>
+                                    <i class="zmdi zmdi-file"></i>
+                                    متن مقاله
+                                </a>
+                            </div>
+                        </div>
+                        <div class="tab-content  card  mb-4">
+                            <div class="Description p-3">
+                                @Html.Raw(Model.BlogPost.Description)
+                            </div>
+                        </div>
+                    </div>
+                     <div class="Comments p-2 card custom-shadow mb-5">
+                        <div class="comment-title">
+                            <i class="rmdir rmdir-comments text-info">
+                            </i>
+                            <h6>
+                                نظرات کاربران
+                            </h6>
+                        </div>
+                        @if (User.Identity is { IsAuthenticated: true })
+                        {
+                            <form method="post" data-ajax="true" asp-controller="Comment" asp-action="CreateComment" id="send_comments">
+                                <input name="command.EntityId" value="@Model.BlogPost.Id" type="hidden" />
+                                <input name="command.CommentType" value="@CommentType.Article" type="hidden" />
+                                <input name="command.PrentId" value="null" id="parentId" type="hidden" />
+                                <input name="command.UserId" value="@User.GetUserId()" type="hidden" />
+                                <p>نظر خودرا وارد کنید :</p>
+                                <textarea name="command.Text" class="form-control" id="text_area" placeholder="متن نظر خود را بنویسید"></textarea>
+                                <button type="submit" class="btn btn-success btn-block">ثبت</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                <p>برای ارسال نظر باید وارد<a href="/auth/login?redirectTo=/blog/show/@Model.BlogPost.Slug#send_comments"> حساب کاربری</a> خود شوید</p>
+                            </div>
+                        }
+                        <hr />
+                         <div id="comment_list">
+                            <partial name="Shared/Comments/_Comments" model="Model.CommentFilterResult"/>
+                        </div> 
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

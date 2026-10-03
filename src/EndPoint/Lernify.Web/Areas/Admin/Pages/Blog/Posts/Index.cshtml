@@ -1,0 +1,151 @@
+﻿@page "{handler?}"
+@model Learnify.Web.Areas.Admin.Pages.Blog.Posts.IndexModel
+@{
+    ViewData["title"] = "مدیریت پست های بلاگ";
+    ViewData["selected"] = "blog_posts";
+}
+<form class="card mb-2" method="get">
+    <div class="card-header mb-0 pb-0 d-flex justify-content-between">
+        <h5>فیلتر</h5>
+        <div class="">
+            <a asp-page="Index" class="btn btn-sm btn-danger">حذف فیلتر</a>
+            <button type="submit" class="btn btn-success btn-sm">اعمال فیلتر</button>
+        </div>
+    </div>
+    <div class="card-body  mb-0">
+        <div class="row">
+            <div class="col-md-6">
+                <label>جستجو:</label>
+                <input type="text" asp-for="FilterParams.Search" class="form-control" placeholder="متن جستوجوی خود را وارد کنید" />
+            </div>
+            <div class="col-md-6">
+                <label>دسته بندی</label>
+                <select class="form-control select2" asp-for="FilterParams.CategorySlug">
+                    <option value="">انتخاب کنید</option>
+                    @foreach (var item in Model.Categories)
+                    {
+                        <option value="@item?.Slug">@item?.Title</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</form>
+
+<button data-toggle="modal" data-target="#addModal" class="btn btn-success mb-1">افزودن مورد جدید</button>
+<div class="card ">
+    <div class="table-responsive card-body p-0 mb-0">
+        <table class="table table-bordered table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>slug</th>
+                    <th>نویسنده</th>
+                    <th>دسته بندی</th>
+                    <th>تعداد بازدید</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.FilterResult.Datas)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.Slug</td>
+                        <td>@item.WriterName</td>
+                        <td>@item.Category.Title</td>
+                        <td>@item.Visit</td>
+                        <td>
+                            <delete-item is-button-tag="true" class="btn btn-danger btn-sm" url="@Url.Page("Index", "Delete", new { id = item.Id })">حذف</delete-item>
+                            <open-modal-helper is-bootstrap4="true" url="@Url.Page("Index", "ShowEditPage", new { id = item.Id })" class="btn btn-sm btn-primary">ویرایش</open-modal-helper>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <partial name="_Pagination" model="Model.FilterResult" />
+</div>
+
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="editAddressModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAddressModalLabel">افزودن دسته بندی</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="row" enctype="multipart/form-data" method="post">
+
+                    <div class="col-12 col-lg-6 col-md-6 mb-3">
+                        <p class="mb-0">
+                            <i class="fa fa-heading"></i>
+                            عنوان :
+                        </p>
+                        <input asp-for="Title" type="text" class="form-control" placeholder="عنوان">
+                        <span class="text-danger" asp-validation-for="Title"></span>
+                    </div>
+
+                    <div class="col-12 col-lg-6 col-md-6 mb-3">
+                        <p class="mb-0">
+                            <i class="fa fa-link"></i>
+                            اسلاگ :
+                        </p>
+                        <input asp-for="Slug" type="text" class="form-control" placeholder="اسلاگ">
+                        <span class="text-danger" asp-validation-for="Slug"></span>
+                    </div>
+
+                    <div class="col-12 col-lg-6 col-md-6 mb-3">
+                        <p class="mb-0">
+                            <i class="fa fa-user"></i>
+                            نام مالک :
+                        </p>
+                        <input asp-for="OwnerName" type="text" class="form-control" placeholder="نام مالک">
+                        <span class="text-danger" asp-validation-for="OwnerName"></span>
+                    </div>
+
+                    <div class="col-12 col-lg-6 col-md-6 mb-3">
+                        <p class="mb-0">
+                            <i class="fa fa-list"></i>
+                            دسته‌بندی :
+                        </p>
+                        <select class="form-control select2" asp-for="CategoryId" style="width:100%">
+                            <option value="">انتخاب دسته‌بندی</option>
+                            @foreach (var item in Model.Categories)
+                            {
+                                <option value="@item?.Id">@item?.Title</option>
+                            }
+                        </select>
+                        <span class="text-danger" asp-validation-for="CategoryId"></span>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <p class="mb-0">
+                            <i class="fa fa-image"></i>
+                            تصویر :
+                        </p>
+                        <input asp-for="ImageFile" type="file" class="form-control">
+                        <span class="text-danger" asp-validation-for="ImageFile"></span>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <p class="mb-0">
+                            <i class="fa fa-align-left"></i>
+                            توضیحات :
+                        </p>
+                        <textarea id="ckeditor" asp-for="Description" class="form-control" rows="5" placeholder="توضیحات"></textarea>
+                        <span class="text-danger" asp-validation-for="Description"></span>
+                    </div>
+
+                    <div class="col-md-12 d-flex mt-2 justify-content-end">
+                        <submit />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

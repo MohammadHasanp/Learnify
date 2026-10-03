@@ -1,0 +1,69 @@
+﻿@using BlogModule.Services
+@model Learnify.Web.ViewModels.EditPostViewModel
+<form class="row" enctype="multipart/form-data" asp-page-handler="Edit" asp-page="Index" method="post" data-ajax="true">
+    @Html.HiddenFor(f => f.Id)
+
+    <div class="col-12 col-lg-6 col-md-6 mb-3">
+        <p class="mb-0">
+            <i class="fa fa-heading"></i>
+            عنوان :
+        </p>
+        <input asp-for="Title" type="text" class="form-control" placeholder="عنوان">
+        <span class="text-danger" asp-validation-for="Title"></span>
+    </div>
+
+    <div class="col-12 col-lg-6 col-md-6 mb-3">
+        <p class="mb-0">
+            <i class="fa fa-link"></i>
+            اسلاگ :
+        </p>
+        <input asp-for="Slug" type="text" class="form-control" placeholder="اسلاگ">
+        <span class="text-danger" asp-validation-for="Slug"></span>
+    </div>
+
+    <div class="col-12 col-lg-6 col-md-6 mb-3">
+        <p class="mb-0">
+            <i class="fa fa-user"></i>
+            نام مالک :
+        </p>
+        <input asp-for="OwnerName" type="text" class="form-control" placeholder="نام مالک">
+        <span class="text-danger" asp-validation-for="OwnerName"></span>
+    </div>
+
+    <div class="col-12 col-lg-6 col-md-6 mb-3">
+        <p class="mb-0">
+            <i class="fa fa-list"></i>
+            دسته‌بندی :
+        </p>
+        <select class="form-control select2" asp-for="CategoryId" style="width:100%">
+            <option value="">انتخاب دسته‌بندی</option>
+            @foreach (var item in Model.Categories)
+            {
+                <option value="@item?.Id">@item?.Title</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="CategoryId"></span>
+    </div>
+
+    <div class="col-12 mb-3">
+        <p class="mb-0">
+            <i class="fa fa-image"></i>
+            تصویر :
+        </p>
+        <input asp-for="ImageFile" type="file" class="form-control">
+        <span class="text-danger" asp-validation-for="ImageFile"></span>
+    </div>
+
+    <div class="col-12 mb-3">
+        <p class="mb-0">
+            <i class="fa fa-align-left"></i>
+            توضیحات :
+        </p>
+        <textarea id="ckeditor" asp-for="Description" class="form-control" rows="5" placeholder="توضیحات"></textarea>
+        <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+
+    <div class="col-md-12 d-flex mt-2 justify-content-end">
+        <submit />
+    </div>
+</form>

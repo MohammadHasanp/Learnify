@@ -1,0 +1,38 @@
+﻿@page
+@model Learnify.Web.Pages.Profile.RegisterTeachersModel
+@{
+    ViewData["Title"] = "ثبت نام مدرس";
+    Layout = "Shared/_ProfileLayout";
+}
+<div class="row ">
+    <div class="col-12 info shadow pl-0 pr-0">
+        <p class="title">
+            <i class="fa fa-address-card-o"></i>
+            ویرایش اطلاعات پروفایل
+        </p>
+        <div class="info-body p-2">
+            <form method="post" class="row" enctype="multipart/form-data">
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        <i class="fa fa-user"></i>
+                        نام کاربری :
+                    </p>
+                    <input asp-for="@Model.UserName" type="text" class="form-control" placeholder="نام کاربری">
+                    <span class="text-danger" asp-validation-for="@Model.UserName"></span>
+                </div>
+
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        <i class="fa fa-user"></i>
+                        رزومه :
+                    </p>
+                    <input asp-for="@Model.CvFile" type="file" class="form-control" placeholder="رزومه ">
+                    <span class="text-danger" asp-validation-for="@Model.CvFile"></span>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn  btn-save  mt-3">ثبت اطلاعات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

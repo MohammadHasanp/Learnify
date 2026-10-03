@@ -1,0 +1,981 @@
+﻿@page "{slug}/{handler?}"
+@using CoreModule.Application._Utilities
+@using Learnify.Web.Pages
+@model CourseModel
+@{
+    ViewData["title"] = Model.Course.Title;
+    var teacher = Model.Course.Teacher;
+}
+@section meta
+{
+    <link rel="stylesheet" href="/css/single-Page.min.css">
+    <link rel="stylesheet" href="/videoJs/video-js.css">
+}
+<input type="hidden" id="course" value="@Model.Course.Slug" />
+<div class="main-content">
+    <div class="breadcrumb">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12  col-xl-8 col-lg-7">
+                    <h1>@Model.Course.Title</h1>
+                    <ul>
+                        <li>
+                            <a href="/">
+                                خانه
+                                <i class="fa fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/courses?category=@Model.Course.MainCategory.Slug">
+                                @Model.Course.MainCategory.Title
+                                <i class="fa fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/courses?category=@Model.Course.SubCategory.Slug">
+                                @Model.Course.SubCategory.Title
+                                <i class="fa fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="current">
+                                @Model.Course.Title
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-6 col-sm-8 col-xl-4 col-lg-5 left-side">
+                    <div class="course-shortlink shadow-sm">
+                        <span class="title"> لینک کوتاه </span>
+                        <span class="link">
+                        </span>
+                        <a href="javascript:void(0)" data-toggle="tooltip" title="" class="copy-btn" data-clipboard-text="codeyad.com/c/xG99" data-original-title="کپی"><i class="zmdi zmdi-copy"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mb-2 mt-4">
+        <div class="row">
+            <div class="col-12 col-xl-3 col-lg-4  mb-3">
+                <div class="course-info p-3">
+
+                    <div class="price mt-2 mb-3">
+                        <div class="d-inline-block">
+                            <i class="zmdi zmdi-money text-success"></i>
+                            قیمت دوره :
+                        </div>
+                        <div class="pull-left d-inline-block ">
+                            @if (Model.Course.Price == 0)
+                            {
+                                <label class="text-success">رایگان</label>
+                            }
+                            else
+                            {
+                                <span style="font-size: 15px;">@Model.Course.Price.ToString("#,0")</span> <label class="text-success">تومان</label>
+                            }
+                        </div>
+                    </div>
+                    <div class="teacher mb-3">
+                        <div class="d-inline-block">
+                            <i class="zmdi zmdi-account-o"></i>
+                            مدرس :
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <a href="/master/@teacher.UserName">@teacher.User.Name @teacher.User.Family</a>
+                        </div>
+                    </div>
+                    <div class="students mb-3">
+                        <div class="d-inline-block">
+                            <i class="zmdi zmdi-accounts-outline"></i>
+                            تعداد دانشجویان
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <span>150</span> <label>نفر</label>
+                        </div>
+                    </div>
+                    <div class="countEpisode mb-3">
+                        <div class="d-inline-block">
+                            <i class="fa fa-th-list text-uppercase"></i>
+                            تعداد قسمت :
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <span>
+                                @Model.Course.Sections.Sum(r => r.Episodes.Count) قسمت
+                            </span>
+                        </div>
+                    </div>
+                    <div class="time mb-3">
+                        <div class="d-inline-block">
+                            <i class="zmdi zmdi-time"></i>
+                            مدت زمان آموزش:
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <span>@Model.Course.GetDuration()</span>
+                        </div>
+                    </div>
+
+                    <div class="status mb-3">
+                        <div class="d-inline-block">
+                            <i class="fa fa-info"></i>
+                            وضعیت دوره :
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <span class="text-primary">
+                                @Model.Course.GetCourseStatus()
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="level mb-3">
+                        <div class="d-inline-block">
+                            <i class="zmdi zmdi-layers"></i>
+                            سطح دوره :
+                        </div>
+                        <div class="pull-left d-inline-block">
+                            <span>
+                                @Model.Course.GetCourseLevel()
+                            </span>
+                        </div>
+                    </div>
+                    <a href="/cart/addItem?courseId=@Model.Course.Id" class="btn btn-block btn-success">ثبت نام</a>
+                </div>
+                <a href="/questions.html" class="btn btn-block btn-primary mt-2">پرسش و پاسخ</a>
+                <a href="#" class="btn btn-block btn-danger mt-2">
+                    <i class="fa fa-heart"></i>
+                    افزودن به علاقه مندی ها
+                </a>
+
+            </div>
+            <div class="col-12 col-xl-9 col-lg-8 ">
+                <div class="course-body">
+                    <div id="instructions">
+                        <p class="video-cover">معرفی دوره</p>
+                        <div id="instructions" style="direction: ltr !important;">
+
+                            <video id="my_video_1" class="video-js vjs-default-skin" width="100%" height="567px"
+                                   controls preload="none" poster='@CoreModuleDirectories.GetCourseImage(Model.Course.ImageName)' lang="fa-ir"
+                                   data-setup='{ "aspectRatio":"640:267", "playbackRates": [1, 1.5, 2] }'
+                                   src="">
+                                <source src="@CoreModuleDirectories.GetCourseVideos(@Model.Course.Id,@Model.Course.VideoName)" type="video/mp4"/>
+                            </video>
+                        </div>
+                    </div>
+                    <div class="tabs mt-2">
+                        <div class="tab-titles row">
+                            <a href="javascript:void(0)" class="selected col-6 col-xl-3 col-lg-4 col-md-4 col-sm-5" id="episode">
+                                <i class="fa fa-th"></i>
+                                قسمت ها
+                            </a>
+                            <a href="javascript:void(0)" id="description" class="col-6 col-xl-3 col-lg-4 col-md-4 col-sm-5">
+                                <i class="zmdi zmdi-file"></i>
+                                توضیحات
+                            </a>
+
+                        </div>
+                    </div>
+                    <div class="tab-content  card shadow   mb-4">
+                        <div class=" ">
+                             <partial name="Shared/Courses/_CourseSections" model="Model.Course" /> 
+                            <div class="Description p-3" style="display: none;">
+                                @Html.Raw(Model.Course.Description)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Comments p-2 card custom-shadow mb-5">
+                        <div class="comment-title">
+                            <i class="zmdi zmdi-comments text-info">
+                            </i>
+                            <h6>
+                                نظرات کاربران
+                            </h6>
+                        </div>
+                        <form>
+                            <p>نظر خودرا وارد کنید :</p>
+                            <textarea id="text_area" name="text_area" placeholder="متن نظر خود را بنویسید" style="display: none;"></textarea>
+                            <div class="ck ck-reset ck-editor ck-rounded-corners" role="application" dir="rtl" lang="fa" aria-labelledby="ck-editor__label_ec3e9881acb44be5ce01e0636f3838588">
+                                <label class="ck ck-label ck-voice-label" id="ck-editor__label_ec3e9881acb44be5ce01e0636f3838588">ویرایشگر متن غنی</label>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-block">ثبت</button>
+                        </form>
+                        <hr>
+                        <div class="main-comments">
+                            <div class="comment-item shadow-sm pb-5">
+                                <img src="images/avatar04.png" alt="">
+                                <p class="title">
+                                    محمد اشرافی <span>
+                                        <i class="fa fa-paper-plane"></i>
+                                        ارسال شده در :
+                                        1399/5/8
+                                    </span>
+                                </p>
+                                <p class="text">
+                                    این دوره چیه ؟! ببینید این دوره یه مقداری سطحش متفاوته ، ما الان می
+                                    خوایم
+                                    بریم باهم کل مستندات سایت Next JS رو کامل باهم بخونیم. ولی
+                                </p>
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-sm btn-info">
+                                        پاسخ
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-danger">
+                                        حذف
+                                    </a>
+                                </div>
+                                <br>
+                                <hr>
+                                <div class="answer pb-5">
+                                    <img src="images/avatar04.png" alt="">
+                                    <p class="title">
+                                        محمد اشرافی <span>
+                                            <i class="fa fa-paper-plane"></i>
+                                            ارسال شده در :
+                                            1399/5/8
+                                        </span>
+                                    </p>
+                                    <p class="text">
+                                        این دوره چیه ؟! ببینید این دوره یه مقداری سطحش متفاوته ، ما الان می
+                                        خوایم
+                                        بریم باهم کل مستندات سایت Next JS رو کامل باهم بخونیم. ولی
+                                    </p>
+                                    <div class="pull-left">
+
+                                        <a href="#" class="btn btn-sm btn-danger">
+                                            حذف
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="answer pb-5">
+                                    <img src="images/avatar04.png" alt="">
+                                    <p class="title">
+                                        محمد اشرافی <span>
+                                            <i class="fa fa-paper-plane"></i>
+                                            ارسال شده در :
+                                            1399/5/8
+                                        </span>
+                                    </p>
+                                    <p class="text">
+                                        این دوره چیه ؟! ببینید این دوره یه مقداری سطحش متفاوته ، ما الان می
+                                        خوایم
+                                        بریم باهم کل مستندات سایت Next JS رو کامل باهم بخونیم. ولی
+                                    </p>
+                                    <div class="pull-left">
+
+                                        <a href="#" class="btn btn-sm btn-danger">
+                                            حذف
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-item shadow-sm pb-5 mt-2">
+                                <img src="images/avatar04.png" alt="">
+                                <p class="title">
+                                    محمد اشرافی <span>
+                                        <i class="fa fa-paper-plane"></i>
+                                        ارسال شده در :
+                                        1399/5/8
+                                    </span>
+                                </p>
+                                <p class="text">
+                                    این دوره چیه ؟! ببینید این دوره یه مقداری سطحش متفاوته ، ما الان می
+                                    خوایم
+                                    بریم باهم کل مستندات سایت Next JS رو کامل باهم بخونیم. ولی
+                                </p>
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-sm btn-info">
+                                        پاسخ
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-danger">
+                                        حذف
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="comment-item shadow-sm pb-5 mt-2">
+                                <img src="images/avatar04.png" alt="">
+                                <p class="title">
+                                    محمد اشرافی <span>
+                                        <i class="fa fa-paper-plane"></i>
+                                        ارسال شده در :
+                                        1399/5/8
+                                    </span>
+                                </p>
+                                <p class="text">
+                                    این دوره چیه ؟! ببینید این دوره یه مقداری سطحش متفاوته ، ما الان می
+                                    خوایم
+                                    بریم باهم کل مستندات سایت Next JS رو کامل باهم بخونیم. ولی
+                                </p>
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-sm btn-info">
+                                        پاسخ
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-danger">
+                                        حذف
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card p-2 pt-4 custom-shadow" style="border-top: 2px solid rgb(1, 182, 85) !important;border-radius: 0;">
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-12 mb-5 ">
+                    <div class="section-title mb-4">
+                        <h1 class="green-line">دوره های مشابه</h1>
+                        <a href="#">
+                            مشاهده همه
+                            <i class="zmdi zmdi-arrow-left"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="owl-carousel owl-theme owl-rtl owl-loaded owl-drag">
+                    <div class="owl-stage-outer">
+                        <div class="owl-stage" style="transform: translate3d(3095px, 0px, 0px); transition: all 1.5s ease 0s; width: 4643px;">
+                            <div class="owl-item cloned" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/3.jpg" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item cloned" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/4.jpg" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item cloned" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/5.jpg" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item cloned" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/1.png" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card  custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/course.jpg" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/1.png" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/2.png" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/3.jpg" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/4.jpg" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/5.jpg" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item active" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/1.png" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item cloned active" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card  custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/course.jpg" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item cloned" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/1.png" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item cloned" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/2.png" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="owl-item cloned" style="width: 299.5px; margin-left: 10px;">
+                                <div class="item p-2">
+                                    <div class="main-card custom-shadow">
+                                        <div class="image-layer">
+                                            <div class="image-cover">
+                                                <a href="#">
+                                                    <i class="fa fa-play-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="نمایش دوره"></i>
+                                                </a>
+                                            </div>
+                                            <img src="images/Course/3.jpg" alt="">
+                                        </div>
+                                        <h3>
+                                            <a href="#">
+                                                آموزش asp.netCore 3 پروژه محور
+                                            </a>
+                                        </h3>
+                                        <div class="info">
+                                            <div class="teacher">
+                                                <i class="zmdi zmdi-account-circle"></i>
+                                                <span>محمد اشرافی</span>
+                                            </div>
+                                            <div class="visit">
+                                                <i class="zmdi zmdi-eye"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                            <div class="comment">
+                                                <i class="zmdi zmdi-comment"></i>
+                                                <span>2,000</span>
+                                            </div>
+                                        </div>
+                                        <div class="footer-card">
+                                            <div class="time pr-2 p-2">
+                                                <i class="zmdi zmdi-time-countdown"></i>
+                                                10:05:06
+                                            </div>
+                                            <div class="price text-left pl-2  p-2">
+                                                <i class=""></i>
+                                                55,000 <span>تومان</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div><div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot active"><span></span></button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="/ckeditor5/build/ckeditor.js"></script>
+    <script src="https://vjs.zencdn.net/7.8.3/video.js"></script>
+    <script src="/js/SinglePage.js" asp-append-version="true"></script>
+}

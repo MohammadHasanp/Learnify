@@ -1,0 +1,65 @@
+﻿@page "{episodeId}/{courseId}"
+@using CoreModule.Application._Utilities
+@model Learnify.Web.Areas.Admin.Pages.Courses.Sections.EditEpisodeModel
+@{
+    ViewData["title"] = "";
+    ViewData["selected"] = "";
+}
+<div class="row ">
+    <div class="col-12 info shadow pl-0 pr-0">
+        <p class="title">
+            <i class="fa fa-address-card-o"></i>
+            @ViewData["Title"]
+        </p>
+        <div class="info-body p-2">
+            <form method="post" class="row" enctype="multipart/form-data">
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        عنوان :
+                    </p>
+                    <input asp-for="@Model.Title" type="text" class="form-control" placeholder="عنوان">
+                    <span class="text-danger" asp-validation-for="@Model.Title"></span>
+                </div>
+
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        زمان  :
+                    </p>
+                    <input asp-for="@Model.Time" type="text" class="form-control" placeholder="00:00:00">
+                    <span class="text-danger" asp-validation-for="@Model.Time"></span>
+                </div>
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        ویدیو :
+                    </p>
+                    <input asp-for="@Model.VideoFile" type="file" class="form-control" placeholder="ویدیو">
+                    <span class="text-danger" asp-validation-for="@Model.VideoFile"></span>
+                </div>
+
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        فایل ضمیمه :
+                    </p>
+                    <input asp-for="@Model.AttachmentFile" type="file" class="form-control" placeholder="فایل ضمیمه ">
+                    <span class="text-danger" asp-validation-for="@Model.AttachmentFile"></span>
+                </div>
+                <div class="col-md-6 mb-3s">
+                    @Html.EditorFor(f => f.IsActive)
+                </div>
+
+                <div class="col-md-6">
+                    @Html.EditorFor(f => f.IsFree)
+                </div>
+                <div class="col-md-6">
+                    <video style="width:100%"
+                           src="@CoreModuleDirectories.GetCourseEpisode((Guid)Model.CourseId!, Model.EpisodeDto.Token, Model.EpisodeDto.VideoName)">
+                    </video>
+                </div>
+
+                <div class="col-md-12 d-flex mt-2 justify-content-end">
+                    <submit />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

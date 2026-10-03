@@ -1,0 +1,26 @@
+﻿@model BlogModule.Services.DTOs.Command.EditCategoryCommand
+<form class="row" asp-page="Index" asp-page-handler="Edit" data-ajax="true">
+    @Html.HiddenFor(f => f.CategoryId)
+
+    <div class="col-12 col-lg-6 col-md-6 mb-3">
+        <p class="mb-0">
+            <i class="fa fa-user"></i>
+            عنوان :
+        </p>
+        <input asp-for="Title" type="text" class="form-control" placeholder="عنوان">
+        <span class="text-danger" asp-validation-for="Title"></span>
+    </div>
+
+    <div class="col-12 col-lg-6 col-md-6 mb-3">
+        <p class="mb-0">
+            <i class="fa fa-link"></i>
+            اسلاگ :
+        </p>
+        <input asp-for="Slug" type="text" class="form-control" placeholder="اسلاگ">
+        <span class="text-danger" asp-validation-for="Slug"></span>
+    </div>
+
+    <div class="col-md-12 d-flex mt-2 justify-content-end">
+        <submit />
+    </div>
+</form>

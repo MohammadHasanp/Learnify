@@ -1,0 +1,90 @@
+﻿@page "{handler?}"
+@using Common.Domain.Utilities
+@using Learnify.Web.Infrastructure.Util
+@model Learnify.Web.Pages.Profile.NotificationsModel
+@{
+    ViewData["Title"] = "پیغام ها ";
+    Layout = "Shared/_ProfileLayout";
+}
+<div class="info shadow pl-0 pr-0">
+    <p class="title">
+        <i class="zmdi zmdi-notifications text-warning"></i>
+        @ViewData["Title"]
+        <delete-item is-button-tag="false" class="pull-left" data-toggle="tooltip" title="حذف همه"
+                     url="@Url.Page("Notifications", "DeleteAll")">
+            <i class="fa fa-trash-o text-danger" style="font-size: 25px"></i>
+        </delete-item>
+    </p>
+
+    <div class="info-body ">
+        <div class="table-responsive">
+            <table class="table text-center  table-hover  table-striped text-center">
+                <thead>
+                    <tr>
+                        <th>متن</th>
+                        <th>وضعیت</th>
+                        <th>تاریخ</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.FilterResult.Datas.Count > 0)
+                    {
+                        @foreach (var item in Model.FilterResult.Datas.OrderBy(c => c.IsSeen))
+                        {
+                            <tr>
+                                <td>
+
+                                    <p>
+                                        <b>
+                                            @item.Title
+                                        </b>
+                                    </p>
+                                    <div>
+                                        @Html.Raw(@item.Text)
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.IsSeen)
+                                    {
+                                        <span class="badge badge-secondary" style="font-size:12px">دیده شده</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-success" style="font-size:12px">جدید</span>
+                                    }
+                                </td>
+                                <td>
+                                    @item.CreationDate.ToPersianDate()
+                                </td>
+                                <td>
+                                    @if (!item.IsSeen)
+                                    {
+                                        <form method="post" asp-page-handler="SeenNotification" class="d-inline-block">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button class="btn btn-success btn-sm" data-toggle="tooltip" title="این پیام را خواندم" onclick="return confirm('ایا از انجام عملیات اطمینان دارید!؟')">
+                                                <i class="fa fa-check text-white"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                    <delete-item url="@Url.Page("Notifications", "DeleteNotification", new { id = item.Id })"
+                                                 data-toggle="tooltip" title="حذف" class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash" style="color:linen"></i>
+                                    </delete-item>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">موردی برای نمایش یافت نشد</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <hr class="mt-0">
+        <partial name="Shared/_Pagination" model="Model.FilterResult" />
+    </div>
+</div>

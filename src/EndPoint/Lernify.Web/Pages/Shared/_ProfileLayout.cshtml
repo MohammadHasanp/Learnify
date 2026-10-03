@@ -1,0 +1,85 @@
+﻿<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/Bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/css/main.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/profile.min.css">
+
+    @await RenderSectionAsync("meta", false)
+</head>
+<body>
+    <div class="overlay"></div>
+    <partial name="Header/_MobileMenu" />
+    <header>
+        <partial name="Header/_TopNav" />
+        @await RenderSectionAsync("middel_header", false)
+        <div class="last-header container-fluid">
+            <partial name="Header/_MainMenu" />
+        </div>
+    </header>
+    <main class="mb-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 breadcrumb">
+                    <ul class="">
+                        @{
+                            var isIndexPage = Context.Request.Path == "/profile";
+                        }
+                        <li>
+                            <a href="/">
+                                خانه
+                                <i class="fa fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        @if (!isIndexPage)
+                        {
+                            <li>
+                                <a href="/Profile">
+                                    پنل کاربری
+                                    <i class="fa fa-chevron-left"></i>
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <a class="current">
+                                @ViewData["title"]
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <partial name="Shared/_ProfileSidbar" />
+
+                <div class="col-12 col-xl-9 col-lg-9 col-md-8 profile-body">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </main>
+    <partial name="_Footer"></partial>
+
+    <div id="ajax-token">
+        @Html.AntiForgeryToken()
+    </div>
+
+    <script src="/js/jquery.3.2.1.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/Bootstrap/bootstrap.min.js"></script>
+    <script src="/js/Bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="https://lib.arvancloud.ir/sweetalert2/9.17.4/sweetalert2.all.js "></script>
+    <partial name="Shared/_ValidationScriptsPartial" />
+    <script src="/global/Global.js" asp-append-version="true"></script>
+    <script src="/global/ClientValidation.js"></script>
+    <script src="/js/particles.js"></script>
+    @await RenderSectionAsync("scripts", false)
+</body>
+</html>

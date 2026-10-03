@@ -1,0 +1,49 @@
+﻿@page
+@model Learnify.Web.Pages.Profile.EditModel
+@{
+    ViewData["Title"] = "ویرایش اطلاعات";
+    Layout = "Shared/_ProfileLayout";
+}
+
+<div class="row ">
+    <div class="col-12 info shadow pl-0 pr-0">
+        <p class="title">
+            <i class="fa fa-address-card-o"></i>
+            ویرایش اطلاعات پروفایل
+        </p>
+        <div class="info-body p-2">
+            <form method="post" class="row">
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        <i class="fa fa-user"></i>
+                        نام :
+                    </p>
+                    <input asp-for="@Model.Name" type="text" class="form-control" placeholder="نام">
+                    <span class="text-danger" asp-validation-for="@Model.Name"></span>
+                </div>
+
+                <div class="col-12 col-lg-6 col-md-6 mb-3">
+                    <p class="mb-0">
+                        <i class="fa fa-user"></i>
+                        نام خانوادگی :
+                    </p>
+                    <input asp-for="@Model.Family" type="text" class="form-control" placeholder="نام خانوادگی ">
+                    <span class="text-danger" asp-validation-for="@Model.Family"></span>
+                </div>
+
+                <div class="col-12 ">
+                    <p class="mb-0">
+                        <i class="fa fa-id-card"></i>
+                        ایمیل :
+                    </p>
+                    <input asp-for="@Model.Email" type="email" class="form-control" placeholder="ایمیل">
+                    <span class="text-danger" asp-validation-for="@Model.Email"></span>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn  btn-save  mt-3">ویرایش اطلاعات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
