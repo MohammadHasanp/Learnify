@@ -291,11 +291,6 @@ Issues and pull requests are welcome! If you want to contribute:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
----
-
-## 📄 License
-
-This project currently has **no license file** — all rights are reserved by the author. If you'd like to use the code, please reach out first (see the author section below) or open an issue.
 
 ---
 
